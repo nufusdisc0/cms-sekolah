@@ -68,6 +68,4 @@ Cocok untuk:
 
 *(Coming soon)*
 
-```markdown
-![Dashboard](public/screenshot/dashboard.png)
-![Berita](public/screenshot/berita.png)
+
