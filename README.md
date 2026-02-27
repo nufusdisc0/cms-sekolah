@@ -1,78 +1,103 @@
 <p align="center">
     <h1 align="center">🎓 CMS Sekolah</h1>
     <p align="center">
-        Sistem Manajemen Website Sekolah berbasis Laravel + SQLite
+        Laravel + SQLite + Livewire School Content Management System
     </p>
 </p>
 
 <p align="center">
 <a href="https://github.com/nufusdisc0/cms-sekolah"><img src="https://img.shields.io/github/stars/nufusdisc0/cms-sekolah?style=social" alt="Stars"></a>
-<a href="https://github.com/nufusdisc0/cms-sekolah"><img src="https://img.shields.io/github/forks/nufusdisc0/cms-sekolah" alt="Forks"></a>
 <a href="https://github.com/nufusdisc0/cms-sekolah"><img src="https://img.shields.io/github/license/nufusdisc0/cms-sekolah" alt="License"></a>
 <a href="https://img.shields.io/badge/Laravel-10.x-red"><img src="https://img.shields.io/badge/Laravel-10.x-red" alt="Laravel"></a>
+<a href="https://img.shields.io/badge/Livewire-3.x-purple"><img src="https://img.shields.io/badge/Livewire-3.x-purple" alt="Livewire"></a>
 <a href="https://img.shields.io/badge/Database-SQLite-blue"><img src="https://img.shields.io/badge/Database-SQLite-blue" alt="SQLite"></a>
 </p>
 
 ---
 
-# 📌 Tentang Project
+# 💼 About This Project
 
-**CMS Sekolah** adalah aplikasi Content Management System berbasis Laravel yang dirancang untuk kebutuhan website sekolah seperti:
+**CMS Sekolah** adalah project portfolio yang dikembangkan untuk mendemonstrasikan kemampuan pengembangan aplikasi web modern menggunakan:
 
-- Profil sekolah
-- Berita & artikel
-- Pengumuman
-- Galeri foto
-- Halaman statis
-- Manajemen pengguna
+- Laravel (Backend Framework)
+- Livewire (Reactive Component System)
+- SQLite (Lightweight Database)
 
-Project ini menggunakan **SQLite** sebagai database utama sehingga ringan, portable, dan sangat mudah dideploy tanpa konfigurasi database server seperti MySQL atau PostgreSQL.
+Project ini mensimulasikan sistem manajemen website sekolah dengan fitur administrasi konten yang lengkap, interaktif, dan ringan.
 
-Cocok untuk:
+Tujuan utama project ini adalah menunjukkan:
 
-- Website sekolah negeri/swasta
-- Server internal sekolah
-- VPS kecil
-- Shared hosting
-- Portfolio project Laravel
+- Kemampuan arsitektur Laravel
+- Implementasi Livewire untuk UI interaktif tanpa SPA framework
+- Penggunaan database portable (SQLite)
+- Clean code & scalable structure
+- Production-ready folder structure
 
 ---
 
-# ✨ Fitur Utama
+# 🧠 Technical Stack
 
-✅ Dashboard Admin  
-✅ CRUD Berita  
-✅ CRUD Pengumuman  
-✅ CRUD Halaman  
-✅ Upload Gambar / Media  
-✅ Manajemen User & Role  
-✅ Database SQLite (tanpa setup server DB)  
-✅ Responsive Design  
-✅ Migration & Seeder Support  
+## ⚙️ Backend
+- Laravel 10+
+- MVC Architecture
+- Eloquent ORM
+- Migration & Seeder
+- Form Request Validation
+- Middleware Protection
+
+## ⚡ Frontend Interaction
+- Laravel Livewire 3
+- Reactive components
+- Real-time validation
+- Dynamic CRUD without page reload
+
+## 🗄 Database
+- SQLite
+- Zero external DB configuration
+- Lightweight & portable
+
+---
+
+# 🎯 Key Features
+
+- Admin Dashboard
+- CRUD Berita
+- CRUD Pengumuman
+- CRUD Halaman Statis
+- Media Upload
+- User Authentication
+- Livewire-powered dynamic forms
+- Pagination & Search
+- Flash messaging & validation
 
 ---
 
-# 🛠 Teknologi yang Digunakan
+# 🏗 Architectural Highlights
 
-- PHP 8+
-- Laravel Framework
-- SQLite Database
-- Blade Template Engine
-- Bootstrap / Tailwind (sesuaikan)
-- Composer
-- Node.js & Vite (jika menggunakan frontend build)
+Project ini dibuat dengan pendekatan:
+
+- Separation of concerns
+- Reusable Livewire components
+- Clean routing structure
+- Resource controllers
+- Blade layout templating
+- Environment-based configuration
+
+Semua interaksi admin seperti create, update, delete dilakukan tanpa reload halaman menggunakan Livewire.
 
 ---
+
+# 🚀 Installation
+
+## 1. Clone Repository
+
+```bash
+git clone https://github.com/nufusdisc0/cms-sekolah.git
+cd cms-sekolah
 
 # 📷 Screenshot
 
 *(Coming soon)*
-
-🚀 Instalasi Lengkap
-
-1️⃣ Clone Repository
-git clone https://github.com/nufusdisc0/cms-sekolah.git
-cd cms-sekolah
 
 🗺 Roadmap Pengembangan
 
