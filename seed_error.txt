@@ -1,0 +1,25 @@
+﻿
+   INFO  Seeding database.  
+
+
+   Illuminate\Database\QueryException 
+
+  SQLSTATE[HY000]: General error: 1 table users has no column named user_status (Connection: sqlite, SQL: insert into "users" ("user_full_name", "user_name", "user_email", "user_password", "user_type", "user_profile_id", "user_status", "is_deleted", "created_by", "updated_by", "updated_at", "created_at") values (Siswa Test, siswa, siswa@test.com, $2y$12$RMJcE2To9BhZ4NvDE257DOBvr1GlllIYLzb9M8Ebt/HSpsdGGsDDu, student, 2, active, false, 1, 1, 2026-02-24 09:32:38, 2026-02-24 09:32:38))
+
+  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:829
+    825Γûò                     $this->getName(), $query, $this->prepareBindings($bindings), $e
+    826Γûò                 );
+    827Γûò             }
+    828Γûò 
+  Γ₧£ 829Γûò             throw new QueryException(
+    830Γûò                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    831Γûò             );
+    832Γûò         }
+    833Γûò     }
+
+  1   vendor\laravel\framework\src\Illuminate\Database\Connection.php:581
+      PDOException::("SQLSTATE[HY000]: General error: 1 table users has no column named user_status")
+
+  2   vendor\laravel\framework\src\Illuminate\Database\Connection.php:581
+      PDO::prepare("insert into "users" ("user_full_name", "user_name", "user_email", "user_password", "user_type", "user_profile_id", "user_status", "is_deleted", "created_by", "updated_by", "updated_at", "created_at") values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+

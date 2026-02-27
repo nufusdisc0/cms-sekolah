@@ -1,0 +1,42 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration 
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('admission_phases', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('academic_year_id')->default(0)->comment('Tahun Pelajaran')->index();
+            $table->string('phase_name', 255)->comment('Gelombang Pendaftaran');
+            $table->date('phase_start_date')->nullable()->comment('Tanggal Mulai');
+            $table->date('phase_end_date')->nullable()->comment('Tanggal Selesai');
+
+            $table->timestamps();
+            $table->softDeletes();
+            $table->datetime('restored_at')->nullable();
+
+            $table->bigInteger('created_by')->default(0);
+            $table->bigInteger('updated_by')->default(0);
+            $table->bigInteger('deleted_by')->default(0);
+            $table->bigInteger('restored_by')->default(0);
+            $table->enum('is_deleted', ['true', 'false'])->default('false');
+
+            $table->unique(['academic_year_id', 'phase_name']);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('admission_phases');
+    }
+};
