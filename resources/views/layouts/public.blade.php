@@ -96,6 +96,7 @@
         }
     </style>
     @stack('styles')
+    @livewireStyles
 </head>
 <body>
     <header>
@@ -251,6 +252,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     </script>
+    @livewireScripts
     @stack('scripts')
 </body>
 </html>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Backend Admin - {{ config('app.name', 'CMS Sekolahku') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    @livewireStyles
 </head>
 <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
@@ -67,6 +68,9 @@
                                     <a href="{{ route('backend.tags.index') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Tags</a>
                                     <a href="{{ route('backend.quotes.index') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Kutipan</a>
                                     <a href="{{ route('backend.subscribers.index') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Subscriber</a>
+                                    <a href="{{ route('backend.messages') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Pesan Masuk</a>
+                                    <a href="{{ route('backend.post_comments_live') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Komentar</a>
+                                    <a href="{{ route('backend.opening_speech') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Sambutan</a>
                                 </div>
                             </div>
                         </div>
@@ -104,6 +108,10 @@
                                     <a href="{{ route('backend.class_groups.index') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Kelas</a>
                                     <a href="{{ route('backend.academic_students.index') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Siswa / Peserta Didik</a>
                                     <a href="{{ route('backend.academic_years.index') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Tahun Pelajaran</a>
+                                    <a href="{{ route('backend.transportations') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Moda Transportasi</a>
+                                    <a href="{{ route('backend.monthly_incomes') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Penghasilan Bulanan</a>
+                                    <a href="{{ route('backend.residences') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Tempat Tinggal</a>
+                                    <a href="{{ route('backend.student_status') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Status Siswa</a>
                                 </div>
                             </div>
                         </div>
@@ -126,6 +134,7 @@
                                     <a href="{{ route('backend.ranks.index') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Pangkat/Golongan</a>
                                     <a href="{{ route('backend.employment_statuses.index') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Status Kepegawaian</a>
                                     <a href="{{ route('backend.salary_sources.index') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Sumber Gaji</a>
+                                    <a href="{{ route('backend.employments') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Pekerjaan</a>
                                 </div>
                             </div>
                         </div>
@@ -144,6 +153,9 @@
                                     <a href="{{ route('backend.registrants.index') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Calon Peserta Didik Baru</a>
                                     <a href="{{ route('backend.admission_phases.index') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Gelombang Pendaftaran</a>
                                     <a href="{{ route('backend.admission_quotas.index') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Kuota Penerimaan</a>
+                                    <a href="{{ route('backend.admission_types') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Jalur Pendaftaran</a>
+                                    <a href="{{ route('backend.registrants_approved') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Diterima</a>
+                                    <a href="{{ route('backend.registrants_unapproved') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Tidak Diterima</a>
                                 </div>
                             </div>
                         </div>
@@ -206,6 +218,23 @@
                         </div>
                     </div>
 
+                    <!-- TAMPILAN -->
+                    <div class="accordion-item border-0 border-bottom">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed py-2 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#menuTampilan">
+                                <i class="fa fa-paint-brush fa-fw me-2"></i> TAMPILAN
+                            </button>
+                        </h2>
+                        <div id="menuTampilan" class="accordion-collapse collapse" data-bs-parent="#sidebarMenu">
+                            <div class="accordion-body p-0">
+                                <div class="list-group list-group-flush bg-light">
+                                    <a href="{{ route('backend.menus') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Menu</a>
+                                    <a href="{{ route('backend.themes') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Tema</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- PENGATURAN -->
                     <div class="accordion-item border-0 border-bottom">
                         <h2 class="accordion-header">
@@ -220,6 +249,10 @@
                                     <a href="{{ route('settings.index', 'social_account') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Jejaring Sosial</a>
                                     <a href="{{ route('settings.index', 'school_profile') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Profil Sekolah</a>
                                     <a href="{{ route('settings.index', 'general') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Umum</a>
+                                    <a href="{{ route('backend.settings_discussion') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Diskusi</a>
+                                    <a href="{{ route('backend.settings_media') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Media</a>
+                                    <a href="{{ route('backend.settings_writing') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Menulis</a>
+                                    <a href="{{ route('backend.settings_reading') }}" class="list-group-item list-group-item-action bg-light border-0 py-2 ps-5"><i class="fa fa-angle-right me-2"></i> Membaca</a>
                                 </div>
                             </div>
                         </div>
@@ -237,10 +270,15 @@
                 </div>
             </div>
             <div class="col-md-10 py-4">
-                @yield('content')
+                @hasSection('content')
+                    @yield('content')
+                @else
+                    {{ $slot ?? '' }}
+                @endif
             </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @livewireScripts
 </body>
 </html>

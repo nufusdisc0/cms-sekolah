@@ -35,26 +35,38 @@ class PublicPageController extends Controller
         $quotes = Quote::all();
 
         // SIDEBAR
-        $headmaster = Option::where('variable', 'headmaster')->value('value');
-        $headmaster_photo = Option::where('variable', 'headmaster_photo')->value('value');
-        $opening_speech = Post::where('post_type', 'page')->where('post_slug', 'sambutan-kepala-sekolah')->first();
+        $headmaster = Setting::where('setting_variable', 'headmaster')->value('setting_value')
+            ?? Option::where('option_name', 'headmaster')->value('option_name');
+        $headmaster_photo = Setting::where('setting_variable', 'headmaster_photo')->value('setting_value');
+        $opening_speech = Post::where('post_type', 'opening_speech')->first()
+            ?? Post::where('post_type', 'page')->where('post_slug', 'sambutan-kepala-sekolah')->first();
 
         $links = Link::where('is_active', 'true')->where('link_type', 'link')->get();
         $banners = Link::where('is_active', 'true')->where('link_type', 'banner')->get();
 
         $most_commented = Post::where('post_type', 'post')
             ->where('post_status', 'publish')
-            ->orderBy('post_counter', 'desc') // Used post_counter instead of comments temporarily
+            ->orderBy('post_counter', 'desc')
             ->take(5)
             ->get();
 
         $active_question = Question::where('is_active', 'true')->first();
         $answers = $active_question ?Answer::where('question_id', $active_question->id)->get() : [];
 
+        // Archives - monthly post counts for current year
+        $archives = Post::where('post_type', 'post')
+            ->where('post_status', 'publish')
+            ->whereYear('created_at', date('Y'))
+            ->selectRaw('CAST(strftime("%m", created_at) AS INTEGER) as month_num, COUNT(*) as count')
+            ->groupByRaw('strftime("%m", created_at)')
+            ->orderByRaw('strftime("%m", created_at)')
+            ->get();
+
         return view('public.home', compact(
             'posts', 'albums', 'videos', 'sliders', 'quotes',
             'headmaster', 'headmaster_photo', 'opening_speech',
-            'links', 'banners', 'most_commented', 'active_question', 'answers'
+            'links', 'banners', 'most_commented', 'active_question', 'answers',
+            'archives'
         ));
     }
 

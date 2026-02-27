@@ -15,6 +15,17 @@ use App\Http\Controllers\Backend\AcademicYearController;
 use App\Http\Controllers\Backend\MajorController;
 use App\Http\Controllers\Backend\ClassGroupController;
 
+// Livewire Components
+use App\Livewire\Backend\PostManager;
+use App\Livewire\Backend\OptionManager;
+use App\Livewire\Backend\MessageManager;
+use App\Livewire\Backend\PostCommentManager;
+use App\Livewire\Backend\OpeningSpeech;
+use App\Livewire\Backend\SettingsManager;
+use App\Livewire\Backend\RegistrantFiltered;
+use App\Livewire\Backend\MenuManager;
+use App\Livewire\Backend\ThemeManager;
+
 /* |-------------------------------------------------------------------------- | Web Routes |-------------------------------------------------------------------------- */
 
 // Public Frontend Routes
@@ -52,7 +63,13 @@ Route::middleware('auth')->group(function () {
             // Modules Routes
             Route::resource('academic_employees', App\Http\Controllers\Backend\AcademicEmployeeController::class)->except(['create', 'show', 'edit']);
 
-            // CMS / Blog Routes
+            // CMS / Blog Routes (Livewire)
+            Route::get('posts-live', PostManager::class)->name('posts_live');
+            Route::get('messages', MessageManager::class)->name('messages');
+            Route::get('post-comments', PostCommentManager::class)->name('post_comments_live');
+            Route::get('opening-speech', OpeningSpeech::class)->name('opening_speech');
+
+            // CMS / Blog Routes (Traditional)
             Route::resource('posts', App\Http\Controllers\Backend\PostController::class)->except(['create', 'show', 'edit']);
             Route::resource('pages', App\Http\Controllers\Backend\PageController::class)->except(['create', 'show', 'edit']);
             Route::resource('post_categories', App\Http\Controllers\Backend\PostCategoryController::class)->except(['create', 'show', 'edit']);
@@ -70,12 +87,32 @@ Route::middleware('auth')->group(function () {
             Route::resource('files', App\Http\Controllers\Backend\FileController::class)->except(['create', 'show', 'edit']);
             Route::resource('subscribers', App\Http\Controllers\Backend\SubscriberController::class)->only(['index', 'destroy']);
 
-            // Admission / PPDB Routes
+            // Admission / PPDB Routes (Traditional + Livewire)
             Route::resource('admission_phases', App\Http\Controllers\Backend\AdmissionPhaseController::class)->except(['create', 'show', 'edit']);
             Route::resource('admission_quotas', App\Http\Controllers\Backend\AdmissionQuotaController::class)->except(['create', 'show', 'edit']);
             Route::resource('registrants', App\Http\Controllers\Backend\RegistrantController::class)->except(['create', 'show', 'edit']);
+            Route::get('registrants-approved', RegistrantFiltered::class)->name('registrants_approved');
+            Route::get('registrants-unapproved', RegistrantFiltered::class)->name('registrants_unapproved');
 
-            // Reference / Options Routes
+            // Academic References (Livewire - Options table)
+            Route::get('transportations', OptionManager::class)->name('transportations');
+            Route::get('monthly-incomes', OptionManager::class)->name('monthly_incomes');
+            Route::get('residences', OptionManager::class)->name('residences');
+            Route::get('student-status', OptionManager::class)->name('student_status');
+            Route::get('admission-types', OptionManager::class)->name('admission_types');
+            Route::get('employments', OptionManager::class)->name('employments');
+
+            // Appearance (Livewire)
+            Route::get('menus', MenuManager::class)->name('menus');
+            Route::get('themes', ThemeManager::class)->name('themes');
+
+            // Settings (Livewire)
+            Route::get('settings-discussion', SettingsManager::class)->name('settings_discussion');
+            Route::get('settings-media', SettingsManager::class)->name('settings_media');
+            Route::get('settings-writing', SettingsManager::class)->name('settings_writing');
+            Route::get('settings-reading', SettingsManager::class)->name('settings_reading');
+
+            // Reference / Options Routes (Traditional)
             Route::resource('educations', App\Http\Controllers\Backend\EducationController::class)->except(['create', 'show', 'edit']);
             Route::resource('special_needs', App\Http\Controllers\Backend\SpecialNeedController::class)->except(['create', 'show', 'edit']);
             Route::resource('employment_statuses', App\Http\Controllers\Backend\EmploymentStatusController::class)->except(['create', 'show', 'edit']);

@@ -149,6 +149,20 @@
     </div>
     @endif
 
+    {{-- ARSIP --}}
+    @if(isset($archives) && $archives->count())
+    <h5 class="page-title mt-3 mb-3">Arsip {{ date('Y') }}</h5>
+    @php
+        $bulan = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    @endphp
+    @foreach($archives as $archive)
+        <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center rounded-0 mb-1">
+            {{ $bulan[$archive->month_num] ?? 'Unknown' }}
+            <small class="border border-secondary pt-1 pb-1 pe-2 ps-2">{{ $archive->count }}</small>
+        </a>
+    @endforeach
+    @endif
+
     {{-- PALING DIKOMENTARI --}}
     @if($most_commented->count())
     <h5 class="page-title mt-3 mb-3">Paling Dilihat / Dikomentari</h5>
