@@ -68,4 +68,31 @@ Cocok untuk:
 
 *(Coming soon)*
 
+🚀 Instalasi Lengkap
+
+1️⃣ Clone Repository
+git clone https://github.com/nufusdisc0/cms-sekolah.git
+cd cms-sekolah
+
+🗺 Roadmap Pengembangan
+
+ -Multi role access control
+ -Sistem PPDB Online
+ -Sistem E-Learning
+ -REST API untuk Mobile App
+ -Multi Bahasa
+ -Tema Dinamis
+ -Backup & Restore Database
+
+📊 Versi
+
+Current Version: v1.0.0
+
+📄 License
+
+Project ini menggunakan lisensi MIT
+
+
+
+
 
