@@ -85,16 +85,6 @@ Project ini dibuat dengan pendekatan:
 
 Semua interaksi admin seperti create, update, delete dilakukan tanpa reload halaman menggunakan Livewire.
 
----
-
-# 🚀 Installation
-
-## 1. Clone Repository
-
-```bash
-git clone https://github.com/nufusdisc0/cms-sekolah.git
-cd cms-sekolah
-
 # 📷 Screenshot
 
 *(Coming soon)*
@@ -116,6 +106,16 @@ Current Version: v1.0.0
 📄 License
 
 Project ini menggunakan lisensi MIT
+
+# 🚀 Installation
+
+## 1. Clone Repository
+## 🚀 Installation
+
+```bash
+git clone https://github.com/nufusdisc0/cms-sekolah.git
+cd cms-sekolah
+
 
 
 
