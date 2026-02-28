@@ -81,7 +81,7 @@
             <div class="row align-items-start">
                 <div class="col-md-4 text-center mb-3 mb-md-0">
                     @if(isset($headmaster_photo) && $headmaster_photo)
-                        <img src="{{ asset('media_library/images/' . $headmaster_photo) }}" class="img-fluid rounded shadow-sm" style="max-height: 220px; object-fit: cover; width: 100%;" alt="Kepala Sekolah">
+                        <img src="{{ asset('storage/media_library/images/' . $headmaster_photo) }}" class="img-fluid rounded shadow-sm" style="max-height: 220px; object-fit: cover; width: 100%;" alt="Kepala Sekolah">
                     @else
                         <div class="d-flex align-items-center justify-content-center rounded" style="height: 200px; background: linear-gradient(135deg, #111b51 0%, #1a2980 100%);">
                             <i class="fa fa-user-circle text-white" style="font-size: 80px; opacity: 0.5;"></i>
