@@ -14,8 +14,7 @@ class PostCommentManager extends Component
     public $editingId = null;
     public $showModal = false;
     public $comment_content = '';
-    public $comment_reply = '';
-    public $comment_status = 'pending';
+    public $comment_status = 'unapproved';
     public $confirmingDeleteId = null;
 
     protected $paginationTheme = 'bootstrap';
@@ -24,7 +23,7 @@ class PostCommentManager extends Component
     {
         return [
             'comment_content' => 'required|string',
-            'comment_status' => 'required|in:approved,pending,spam',
+            'comment_status' => 'required|in:approved,unapproved,spam',
         ];
     }
 
@@ -34,7 +33,7 @@ class PostCommentManager extends Component
         $this->editingId = $c->id;
         $this->comment_content = $c->comment_content ?? '';
         $this->comment_reply = $c->comment_reply ?? '';
-        $this->comment_status = $c->comment_status ?? 'pending';
+        $this->comment_status = $c->comment_status ?? 'unapproved';
         $this->showModal = true;
     }
 

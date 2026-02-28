@@ -24,6 +24,7 @@ class DashboardController extends Controller
             'tags' => Tag::count(),
             'links' => Link::where('link_type', 'link')->count(),
             'quotes' => Quote::count(),
+            'banners' => \App\Models\Banner::count(),
         ];
 
         $recent_comments = Comment::where('comment_type', 'post')
@@ -31,6 +32,11 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        return view('backend.dashboard.index', compact('widget_box', 'recent_comments'));
+        $active_banners = \App\Models\Banner::where('status', 'Aktif')
+            ->orderBy('banner_order', 'asc')
+            ->take(3)
+            ->get();
+
+        return view('backend.dashboard.index', compact('widget_box', 'recent_comments', 'active_banners'));
     }
 }

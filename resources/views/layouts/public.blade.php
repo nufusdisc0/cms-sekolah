@@ -3,7 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>@yield('title', config('app.name', 'CMS Sekolahku'))</title>
+    <title>@yield('title', $global_settings['school_name']->setting_value ?? config('app.name', 'CMS Sekolahku'))</title>
+    @php $favicon = isset($global_settings['logo']) && !empty($global_settings['logo']->setting_value) ? asset('media_library/images/' . $global_settings['logo']->setting_value) : asset('images/logo.png'); @endphp
+    <link rel="icon" type="image/png" href="{{ $favicon }}">
     <meta name="description" content="@yield('meta_description', 'Website Resmi Sekolah')">
     <meta name="keywords" content="pendidikan, sekolah, education">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -16,16 +18,16 @@
 
         /* TOP BAR */
         .top-bar { background-color: #111b51; color: #fff; font-size: 14px; padding: 16px 0 0; }
-        .top-bar a { color: #fff; }
-        .top-bar a:hover { color: #ff5a2c; }
+        .top-bar *, .top-bar a, .top-bar p, .top-bar class, .top-bar h5, .top-bar small { color: #fff !important; }
+        .top-bar a:hover { color: #ff5a2c !important; }
         .top-bar i { margin-right: 5px; }
         .top-header { display: flex; align-items: center; }
 
         /* MENU BAR */
         .menu-bar { text-transform: uppercase; font-weight: bold; background-color: #ff5a2c; border-bottom: 1px solid #111b51; }
         .menu-bar .navbar { padding: 0; }
-        .menu-bar .nav-link { color: #fff !important; padding: 12px 16px; font-size: 14px; transition: background 0.2s; }
-        .menu-bar .nav-link:hover, .menu-bar .nav-link.active { background-color: #111b51; }
+        .menu-bar .nav-link { color: #fff !important; padding: 12px 16px; font-size: 14px; transition: background 0.2s; font-weight: bold; }
+        .menu-bar .nav-link:hover, .menu-bar .nav-link.active { background-color: #111b51; color: #fff !important; }
         .menu-bar .navbar-toggler { border-color: rgba(255,255,255,0.5); }
         .menu-bar .navbar-toggler-icon { filter: invert(1); }
 
@@ -59,11 +61,11 @@
 
         /* FOOTER */
         footer { color: #fff; font-size: 14px; }
+        footer *, footer a, footer p, footer dt, footer dd, footer span, footer .text-muted { color: #fff !important; }
         footer .primary-footer { background-color: #111b51; padding: 30px 0; }
         footer .secondary-footer { border-top: 1px solid #fff; background-color: #ff5a2c; padding: 10px 0; }
         footer .copyright { color: #fff; }
-        footer a { color: #fff; }
-        footer a:hover { color: yellow; }
+        footer a:hover { color: yellow !important; }
         footer .page-title { color: #fff; }
         footer .page-title:after { border-bottom: 2px solid #fff; }
 
@@ -109,8 +111,11 @@
                             @php $logo = isset($global_settings['logo']) ? asset('media_library/images/' . $global_settings['logo']->setting_value) : asset('images/logo.png'); @endphp
                             <img src="{{ $logo }}" style="max-height: 70px; width: auto; max-width: 250px; object-fit: contain;" class="mt-2 me-4 mb-3" onerror="this.style.display='none'" alt="Logo Sekolah">
                             <ul class="list-unstyled top-left mb-0">
-                                <li><h5 class="brand mb-0">{{ strtoupper($global_settings['school_name']->setting_value ?? config('app.name', 'SEKOLAH')) }}</h5></li>
-                                <li><small>Website Resmi Sekolah</small></li>
+                                <li><h5 class="brand mb-0" style="color: #111b51;">{{ strtoupper($global_settings['school_name']->setting_value ?? config('app.name', 'SEKOLAH')) }}</h5></li>
+                                @if(!empty($global_settings['motto']->setting_value))
+                                    <li><small class="fw-bold" style="color: #ff5a2c; font-style: italic;">"{{ $global_settings['motto']->setting_value }}"</small></li>
+                                @endif
+                                <li><small><i class="fa fa-map-marker me-1"></i> {{ $global_settings['street_address']->setting_value ?? 'Website Resmi Sekolah' }}</small></li>
                             </ul>
                         </div>
                     </div>
@@ -138,7 +143,7 @@
                             <li class="nav-item"><a class="nav-link" href="{{ url('/') }}"><i class="fa fa-home"></i></a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ url('/page/profil') }}">PROFIL</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ url('/page/visi-misi') }}">VISI & MISI</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url('/contact') }}">KONTAK</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url('/page/kontak') }}">KONTAK</a></li>
                             @auth
                                 <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">DASHBOARD</a></li>
                             @else
@@ -165,19 +170,32 @@
         <div class="container-fluid primary-footer">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-4 col-12 text-md-start mb-2 mt-2">
-                        <h6 class="page-title">Hubungi Kami</h6>
-                        <p>{{ $global_settings['school_name']->setting_value ?? config('app.name', 'Sekolah') }}</p>
-                        <dl class="row">
-                            <dt class="col-lg-4 col-md-4 col-sm-12"><span class="fa fa-map-marker"></span> Alamat</dt>
-                            <dd class="col-lg-8 col-md-8 col-sm-12">{{ $global_settings['street_address']->setting_value ?? 'Jl. Pendidikan No. 1' }}</dd>
-                            <dt class="col-lg-4 col-md-4 col-sm-12"><span class="fa fa-phone"></span> Telepon</dt>
-                            <dd class="col-lg-8 col-md-8 col-sm-12">{{ $global_settings['phone']->setting_value ?? '(021) 123-4567' }}</dd>
-                            <dt class="col-lg-4 col-md-4 col-sm-12"><span class="fa fa-envelope"></span> Email</dt>
-                            <dd class="col-lg-8 col-md-8 col-sm-12">{{ $global_settings['email']->setting_value ?? 'info@sekolah.sch.id' }}</dd>
+                    <div class="col-md-5 col-12 text-md-start mb-2 mt-2">
+                        <h6 class="page-title">Profil & Kontak</h6>
+                        <p class="mb-1 fw-bold text-uppercase" style="color: #111b51;">{{ $global_settings['school_name']->setting_value ?? config('app.name', 'Sekolah') }}</p>
+                        @if(!empty($global_settings['npsn']->setting_value))
+                            <p class="mb-2 small text-muted">NPSN: <span class="badge bg-secondary">{{ $global_settings['npsn']->setting_value }}</span></p>
+                        @endif
+                        <dl class="row mt-3 small">
+                            <dt class="col-lg-3 col-md-4 col-sm-12 text-muted"><span class="fa fa-map-marker me-2"></span> Alamat</dt>
+                            <dd class="col-lg-9 col-md-8 col-sm-12">
+                                {{ $global_settings['street_address']->setting_value ?? 'Jl. Pendidikan No. 1' }}<br>
+                                @if(!empty($global_settings['village']->setting_value))
+                                Kel. {{ $global_settings['village']->setting_value }}, Kec. {{ $global_settings['sub_district']->setting_value ?? '' }}<br>
+                                @endif
+                                {{ $global_settings['district']->setting_value ?? '' }} {{ !empty($global_settings['province']->setting_value) ? ', ' . $global_settings['province']->setting_value : '' }} {{ $global_settings['postal_code']->setting_value ?? '' }}
+                            </dd>
+                            <dt class="col-lg-3 col-md-4 col-sm-12 mt-2 text-muted"><span class="fa fa-phone me-2"></span> Telp</dt>
+                            <dd class="col-lg-9 col-md-8 col-sm-12 mt-2">{{ $global_settings['phone']->setting_value ?? '(021) 123-4567' }}</dd>
+                            <dt class="col-lg-3 col-md-4 col-sm-12 mt-2 text-muted"><span class="fa fa-envelope me-2"></span> Email</dt>
+                            <dd class="col-lg-9 col-md-8 col-sm-12 mt-2">{{ $global_settings['email']->setting_value ?? 'info@sekolah.sch.id' }}</dd>
+                            @if(!empty($global_settings['website']->setting_value))
+                            <dt class="col-lg-3 col-md-4 col-sm-12 mt-2 text-muted"><span class="fa fa-globe me-2"></span> Web</dt>
+                            <dd class="col-lg-9 col-md-8 col-sm-12 mt-2"><a href="{{ $global_settings['website']->setting_value }}" target="_blank" class="text-decoration-none">{{ $global_settings['website']->setting_value }}</a></dd>
+                            @endif
                         </dl>
                     </div>
-                    <div class="col-md-4 col-12 text-md-start mb-2 mt-2">
+                    <div class="col-md-3 col-12 text-md-start mb-2 mt-2">
                         <h6 class="page-title">Tags</h6>
                         <div class="tag-content-block tag">
                             @php $tags = \App\Models\Tag::take(10)->get(); @endphp

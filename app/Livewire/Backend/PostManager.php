@@ -89,7 +89,7 @@ class PostManager extends Component
             'post_tags' => $this->post_tags ?: null,
         ];
 
-        if ($this->post_image) {
+        if (is_object($this->post_image) && method_exists($this->post_image, 'store')) {
             $data['post_image'] = $this->post_image->store('posts', 'public');
         }
 

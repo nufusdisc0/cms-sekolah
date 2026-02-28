@@ -14,6 +14,7 @@ use App\Http\Controllers\Backend\EmployeeController;
 use App\Http\Controllers\Backend\AcademicYearController;
 use App\Http\Controllers\Backend\MajorController;
 use App\Http\Controllers\Backend\ClassGroupController;
+use App\Http\Controllers\Backend\BulkImportController;
 
 // Livewire Components
 use App\Livewire\Backend\PostManager;
@@ -35,6 +36,36 @@ Route::get('/page/{slug}', [PublicPageController::class , 'page'])->name('public
 Route::get('/category/{slug}', [PublicPageController::class , 'category'])->name('public.category');
 Route::get('/tag/{slug}', [PublicPageController::class , 'tag'])->name('public.tag');
 Route::get('/contact', [PublicPageController::class , 'contact'])->name('public.contact');
+
+// Public Admission Routes
+Route::get('/admission/form', [\App\Http\Controllers\PublicAdmissionController::class , 'showForm'])->name('public.admission.form');
+Route::post('/admission/step1', [\App\Http\Controllers\PublicAdmissionController::class , 'validateAndShowStep2'])->name('admission.step1');
+Route::post('/admission/step2', [\App\Http\Controllers\PublicAdmissionController::class , 'validateAndShowStep3'])->name('admission.step2');
+Route::post('/admission/step3', [\App\Http\Controllers\PublicAdmissionController::class , 'validateAndShowStep4'])->name('admission.step3');
+Route::post('/admission/submit', [\App\Http\Controllers\PublicAdmissionController::class , 'submitForm'])->name('admission.submit');
+Route::get('/admission/confirmation/{registrant}', [\App\Http\Controllers\PublicAdmissionController::class , 'showConfirmation'])->name('public.admission.confirmation');
+Route::get('/admission/download-pdf/{registrant}', [\App\Http\Controllers\PublicAdmissionController::class , 'downloadFormPDF'])->name('admission.download-pdf');
+Route::get('/admission/blank-form', [\App\Http\Controllers\PublicAdmissionController::class , 'downloadBlankForm'])->name('admission.blank-form');
+Route::get('/admission/results', [\App\Http\Controllers\PublicAdmissionController::class , 'showResultsLookup'])->name('admission.results-lookup');
+Route::post('/admission/check-results', [\App\Http\Controllers\PublicAdmissionController::class , 'checkResults'])->name('admission.check-results');
+
+// Public Admission API Endpoints
+Route::get('/api/admission-phases', [\App\Http\Controllers\PublicAdmissionController::class , 'getAdmissionPhases']);
+Route::get('/api/majors/{phaseId}', [\App\Http\Controllers\PublicAdmissionController::class , 'getMajorsForPhase']);
+
+// Public Directory Routes
+Route::get('/directory/alumni', [\App\Http\Controllers\PublicDirectoryController::class , 'showAlumniDirectory'])->name('public.directory.alumni');
+Route::get('/directory/alumni/{student}', [\App\Http\Controllers\PublicDirectoryController::class , 'showAlumniProfile'])->name('public.directory.alumni.profile');
+Route::get('/directory/students', [\App\Http\Controllers\PublicDirectoryController::class , 'showStudentDirectory'])->name('public.directory.students');
+Route::get('/directory/students/{student}', [\App\Http\Controllers\PublicDirectoryController::class , 'showStudentProfile'])->name('public.directory.student.profile');
+Route::get('/directory/employees', [\App\Http\Controllers\PublicDirectoryController::class , 'showEmployeeDirectory'])->name('public.directory.employees');
+Route::get('/directory/employees/{employee}', [\App\Http\Controllers\PublicDirectoryController::class , 'showEmployeeProfile'])->name('public.directory.employee.profile');
+Route::get('/api/directory/search', [\App\Http\Controllers\PublicDirectoryController::class , 'searchDirectory']);
+
+// Public Search Routes
+Route::get('/search', [\App\Http\Controllers\SearchController::class , 'search'])->name('public.search');
+Route::get('/api/search/autocomplete', [\App\Http\Controllers\SearchController::class , 'autocomplete']);
+Route::get('/api/search/trending', [\App\Http\Controllers\SearchController::class , 'trending']);
 
 Route::get('/login', [AuthController::class , 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class , 'login'])->middleware('guest');
@@ -76,7 +107,7 @@ Route::middleware('auth')->group(function () {
             Route::resource('tags', App\Http\Controllers\Backend\TagController::class)->except(['create', 'show', 'edit']);
             Route::resource('image_sliders', App\Http\Controllers\Backend\ImageSliderController::class)->except(['create', 'show', 'edit']);
             Route::resource('links', App\Http\Controllers\Backend\LinkController::class)->except(['create', 'show', 'edit']);
-            Route::resource('banners', App\Http\Controllers\Backend\BannerController::class)->except(['create', 'show', 'edit']);
+
             Route::resource('questions', App\Http\Controllers\Backend\QuestionController::class)->except(['create', 'show', 'edit']);
             Route::resource('answers', App\Http\Controllers\Backend\AnswerController::class)->except(['create', 'show', 'edit']);
             Route::resource('quotes', App\Http\Controllers\Backend\QuoteController::class)->except(['create', 'show', 'edit']);
@@ -91,6 +122,50 @@ Route::middleware('auth')->group(function () {
             Route::resource('admission_phases', App\Http\Controllers\Backend\AdmissionPhaseController::class)->except(['create', 'show', 'edit']);
             Route::resource('admission_quotas', App\Http\Controllers\Backend\AdmissionQuotaController::class)->except(['create', 'show', 'edit']);
             Route::resource('registrants', App\Http\Controllers\Backend\RegistrantController::class)->except(['create', 'show', 'edit']);
+
+            // PDF Generation Routes for Admissions
+            Route::get('registrants/{registrant}/download-pdf', [App\Http\Controllers\Backend\RegistrantController::class , 'downloadPDF'])->name('registrants.download-pdf');
+            Route::get('registrants/{registrant}/view-pdf', [App\Http\Controllers\Backend\RegistrantController::class , 'viewPDF'])->name('registrants.view-pdf');
+            Route::get('registrants/{registrant}/regenerate-registration-number', [App\Http\Controllers\Backend\RegistrantController::class , 'regenerateRegistrationNumber'])->name('registrants.regenerate-registration-number');
+            Route::get('admission/blank-form-pdf', [App\Http\Controllers\Backend\RegistrantController::class , 'downloadBlankForm'])->name('admission.blank-form-pdf');
+
+            // Admission Selection Routes
+            Route::resource('selections', App\Http\Controllers\Backend\AdmissionSelectionController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])->names('selection');
+            Route::post('selections/{selection}/execute', [App\Http\Controllers\Backend\AdmissionSelectionController::class , 'executeSelection'])->name('selection.execute');
+            Route::post('selections/{selection}/announce-results', [App\Http\Controllers\Backend\AdmissionSelectionController::class , 'announceResults'])->name('selection.announce-results');
+            Route::get('selections/{selection}/results', [App\Http\Controllers\Backend\AdmissionSelectionController::class , 'viewResults'])->name('selection.results');
+            Route::get('selections/{selection}/export', [App\Http\Controllers\Backend\AdmissionSelectionController::class , 'exportResults'])->name('selection.export');
+            Route::post('selections/{selection}/rollback', [App\Http\Controllers\Backend\AdmissionSelectionController::class , 'rollbackSelection'])->name('selection.rollback');
+            Route::get('selections/{selection}/registrant-result', [App\Http\Controllers\Backend\AdmissionSelectionController::class , 'getRegistrantResult'])->name('selection.registrant-result');
+
+            // Bulk Import Routes
+            Route::get('import/students', [BulkImportController::class , 'showStudentImportForm'])->name('import.students.form');
+            Route::post('import/students/preview', [BulkImportController::class , 'previewStudentImport'])->name('import.students.preview');
+            Route::post('import/students/process', [BulkImportController::class , 'processStudentImport'])->name('import.students.process');
+            Route::get('import/students/{importLog}/results', [BulkImportController::class , 'showStudentResults'])->name('import.students.results');
+            Route::get('import/students/{importLog}/download-errors', [BulkImportController::class , 'downloadStudentErrorReport'])->name('import.students.download-errors');
+            Route::get('import/students/template', [BulkImportController::class , 'downloadStudentTemplate'])->name('import.students.template');
+
+            Route::get('import/employees', [BulkImportController::class , 'showEmployeeImportForm'])->name('import.employees.form');
+            Route::post('import/employees/preview', [BulkImportController::class , 'previewEmployeeImport'])->name('import.employees.preview');
+            Route::post('import/employees/process', [BulkImportController::class , 'processEmployeeImport'])->name('import.employees.process');
+            Route::get('import/employees/{importLog}/results', [BulkImportController::class , 'showEmployeeResults'])->name('import.employees.results');
+            Route::get('import/employees/{importLog}/download-errors', [BulkImportController::class , 'downloadEmployeeErrorReport'])->name('import.employees.download-errors');
+            Route::get('import/employees/template', [BulkImportController::class , 'downloadEmployeeTemplate'])->name('import.employees.template');
+
+            Route::get('import/history', [BulkImportController::class , 'showImportHistory'])->name('import.history');
+            Route::post('import/{importLog}/rollback', [BulkImportController::class , 'rollbackImport'])->name('import.rollback');
+
+            // Reporting & Analytics Routes
+            Route::get('reports/dashboard', [App\Http\Controllers\Backend\ReportingController::class , 'dashboard'])->name('reports.dashboard');
+            Route::get('reports/students', [App\Http\Controllers\Backend\ReportingController::class , 'studentStatistics'])->name('reports.students');
+            Route::get('reports/admissions', [App\Http\Controllers\Backend\ReportingController::class , 'admissionAnalytics'])->name('reports.admissions');
+            Route::get('reports/employees', [App\Http\Controllers\Backend\ReportingController::class , 'employeeStatistics'])->name('reports.employees');
+            Route::get('reports/academic', [App\Http\Controllers\Backend\ReportingController::class , 'academicAnalysis'])->name('reports.academic');
+            Route::get('reports/students/export', [App\Http\Controllers\Backend\ReportingController::class , 'exportStudentReport'])->name('reports.students.export');
+            Route::get('reports/admissions/export', [App\Http\Controllers\Backend\ReportingController::class , 'exportAdmissionReport'])->name('reports.admissions.export');
+            Route::get('reports/employees/export', [App\Http\Controllers\Backend\ReportingController::class , 'exportEmployeeReport'])->name('reports.employees.export');
+
             Route::get('registrants-approved', RegistrantFiltered::class)->name('registrants_approved');
             Route::get('registrants-unapproved', RegistrantFiltered::class)->name('registrants_unapproved');
 
@@ -103,14 +178,11 @@ Route::middleware('auth')->group(function () {
             Route::get('employments', OptionManager::class)->name('employments');
 
             // Appearance (Livewire)
-            Route::get('menus', MenuManager::class)->name('menus');
             Route::get('themes', ThemeManager::class)->name('themes');
+            Route::get('banners', \App\Livewire\Backend\BannerManager::class)->name('banners.index');
 
             // Settings (Livewire)
-            Route::get('settings-discussion', SettingsManager::class)->name('settings_discussion');
-            Route::get('settings-media', SettingsManager::class)->name('settings_media');
-            Route::get('settings-writing', SettingsManager::class)->name('settings_writing');
-            Route::get('settings-reading', SettingsManager::class)->name('settings_reading');
+    
 
             // Reference / Options Routes (Traditional)
             Route::resource('educations', App\Http\Controllers\Backend\EducationController::class)->except(['create', 'show', 'edit']);

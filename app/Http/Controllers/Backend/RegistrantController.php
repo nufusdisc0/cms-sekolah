@@ -6,9 +6,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Registrant;
 use App\Models\Major;
+use App\Services\AdmissionService;
+use App\Services\RegistrationNumberService;
 
 class RegistrantController extends Controller
 {
+    protected $admissionService;
+
+    public function __construct(AdmissionService $admissionService)
+    {
+        $this->admissionService = $admissionService;
+    }
+
     public function index()
     {
         $registrants = Registrant::orderBy('id', 'desc')->get();
@@ -67,5 +76,71 @@ class RegistrantController extends Controller
     {
         $registrant->delete();
         return redirect()->back()->with('success', 'Registrant deleted successfully.');
+    }
+
+    /**
+     * Download filled PDF admission form for a registrant
+     *
+     * @param Registrant $registrant
+     * @return Response
+     */
+    public function downloadPDF(Registrant $registrant)
+    {
+        try {
+            return $this->admissionService->generateFilledPDF($registrant, true);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to generate PDF: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Stream PDF for viewing in browser
+     *
+     * @param Registrant $registrant
+     * @return Response
+     */
+    public function viewPDF(Registrant $registrant)
+    {
+        try {
+            $content = $this->admissionService->generateFilledPDF($registrant, false);
+            return response($content, 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="Admission_Form_' . $registrant->registration_number . '.pdf"',
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to view PDF: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download blank admission form template
+     *
+     * @return Response
+     */
+    public function downloadBlankForm()
+    {
+        try {
+            return $this->admissionService->generateBlankPDF(true);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to generate form template: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Regenerate registration number for a registrant
+     *
+     * @param Registrant $registrant
+     * @return Response
+     */
+    public function regenerateRegistrationNumber(Registrant $registrant)
+    {
+        try {
+            $newNumber = RegistrationNumberService::generate();
+            $registrant->update(['registration_number' => $newNumber]);
+
+            return redirect()->back()->with('success', 'Registration number regenerated: ' . $newNumber);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to regenerate registration number: ' . $e->getMessage());
+        }
     }
 }

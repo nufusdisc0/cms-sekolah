@@ -30,8 +30,9 @@ class PublicPageController extends Controller
             ->get();
 
         $albums = Album::orderBy('created_at', 'desc')->take(4)->get();
-        $videos = Video::orderBy('created_at', 'desc')->take(2)->get();
-        $sliders = ImageSlider::all();
+        // Fetch videos from the Post model since backend/videos manages them as post_type = 'video'
+        $videos = Post::where('post_type', 'video')->where('post_status', 'publish')->orderBy('created_at', 'desc')->take(2)->get();
+        $sliders = ImageSlider::where('is_active', 'true')->get();
         $quotes = Quote::all();
 
         // SIDEBAR
@@ -42,7 +43,7 @@ class PublicPageController extends Controller
             ?? Post::where('post_type', 'page')->where('post_slug', 'sambutan-kepala-sekolah')->first();
 
         $links = Link::where('is_active', 'true')->where('link_type', 'link')->get();
-        $banners = Link::where('is_active', 'true')->where('link_type', 'banner')->get();
+        $banners = \App\Models\Banner::where('status', 'Aktif')->orderBy('banner_order', 'asc')->get();
 
         $most_commented = Post::where('post_type', 'post')
             ->where('post_status', 'publish')
@@ -53,14 +54,19 @@ class PublicPageController extends Controller
         $active_question = Question::where('is_active', 'true')->first();
         $answers = $active_question ?Answer::where('question_id', $active_question->id)->get() : [];
 
-        // Archives - monthly post counts for current year
-        $archives = Post::where('post_type', 'post')
+        // Archives - monthly post counts grouped by year
+        $archivesData = Post::where('post_type', 'post')
             ->where('post_status', 'publish')
-            ->whereYear('created_at', date('Y'))
-            ->selectRaw('CAST(strftime("%m", created_at) AS INTEGER) as month_num, COUNT(*) as count')
-            ->groupByRaw('strftime("%m", created_at)')
-            ->orderByRaw('strftime("%m", created_at)')
+            ->selectRaw('CAST(strftime("%Y", created_at) AS INTEGER) as year_num, CAST(strftime("%m", created_at) AS INTEGER) as month_num, COUNT(*) as count')
+            ->groupByRaw('strftime("%Y", created_at), strftime("%m", created_at)')
+            ->orderByRaw('year_num DESC, month_num DESC')
             ->get();
+
+        // Refactor the flat response into a nested array: [ "2026" => [ ["month_num"=>2, "count"=>3] ] ]
+        $archives = [];
+        foreach ($archivesData as $data) {
+            $archives[$data->year_num][] = $data;
+        }
 
         return view('public.home', compact(
             'posts', 'albums', 'videos', 'sliders', 'quotes',
@@ -83,7 +89,7 @@ class PublicPageController extends Controller
     public function page($slug)
     {
         $page = Post::where('post_slug', $slug)
-            ->where('post_type', 'page')
+            ->whereIn('post_type', ['page', 'opening_speech'])
             ->where('post_status', 'publish')
             ->firstOrFail();
 
