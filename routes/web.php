@@ -32,6 +32,7 @@ use App\Livewire\Backend\ThemeManager;
 // Public Frontend Routes
 Route::get('/', [PublicPageController::class , 'home'])->name('home');
 Route::get('/post/{slug}', [PublicPageController::class , 'post'])->name('public.post');
+Route::post('/post/{slug}/comment', [PublicPageController::class , 'storeComment'])->name('public.post.comment');
 Route::get('/page/{slug}', [PublicPageController::class , 'page'])->name('public.page');
 Route::get('/category/{slug}', [PublicPageController::class , 'category'])->name('public.category');
 Route::get('/tag/{slug}', [PublicPageController::class , 'tag'])->name('public.tag');

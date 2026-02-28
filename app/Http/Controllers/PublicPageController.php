@@ -83,7 +83,42 @@ class PublicPageController extends Controller
             ->where('post_status', 'publish')
             ->firstOrFail();
 
-        return view('public.post', compact('post'));
+        $comments = \App\Models\Comment::where('comment_post_id', $post->id)
+            ->where('comment_type', 'post')
+            ->where('comment_status', 'approved')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return view('public.post', compact('post', 'comments'));
+    }
+
+    public function storeComment(Request $request, $slug)
+    {
+        $post = Post::where('post_slug', $slug)
+            ->where('post_type', 'post')
+            ->where('post_status', 'publish')
+            ->firstOrFail();
+
+        $request->validate([
+            'comment_author' => 'required|string|max:255',
+            'comment_email' => 'required|email|max:255',
+            'comment_content' => 'required|string',
+            'comment_url' => 'nullable|string|max:255'
+        ]);
+
+        \App\Models\Comment::create([
+            'comment_post_id' => $post->id,
+            'comment_author' => $request->comment_author,
+            'comment_email' => $request->comment_email,
+            'comment_url' => $request->comment_url,
+            'comment_ip_address' => $request->ip(),
+            'comment_content' => $request->comment_content,
+            'comment_status' => 'unapproved',
+            'comment_agent' => $request->header('User-Agent'),
+            'comment_type' => 'post',
+        ]);
+
+        return redirect()->back()->with('success', 'Komentar Anda berhasil dikirim dan sedang menunggu moderasi dari staf kami sebelum ditampilkan.');
     }
 
     public function page($slug)
