@@ -184,6 +184,7 @@
                                     <a href="{{ route('backend.majors.index') }}" class="list-group-item"><i class="fa fa-angle-right fa-fw"></i> Kompetensi/Jurusan</a>
                                     <a href="{{ route('backend.academic_years.index') }}" class="list-group-item"><i class="fa fa-angle-right fa-fw"></i> Tahun Pelajaran</a>
                                     <a href="{{ route('backend.alumni.index') }}" class="list-group-item"><i class="fa fa-angle-right fa-fw"></i> Direktori Alumni</a>
+                                    <a href="{{ route('backend.import.students.form') }}" class="list-group-item"><i class="fa fa-angle-right fa-fw"></i> Import Siswa</a>
                                 </div>
                             </div>
                         </div>
@@ -202,6 +203,7 @@
                                     <a href="{{ route('backend.academic_employees.index') }}" class="list-group-item"><i class="fa fa-angle-right fa-fw"></i> Data Pegawai</a>
                                     <a href="{{ route('backend.employment_types.index') }}" class="list-group-item"><i class="fa fa-angle-right fa-fw"></i> Jenis Pegawai</a>
                                     <a href="{{ route('backend.employments') }}" class="list-group-item"><i class="fa fa-angle-right fa-fw"></i> Jabatan / Tugas</a>
+                                    <a href="{{ route('backend.import.employees.form') }}" class="list-group-item"><i class="fa fa-angle-right fa-fw"></i> Import Pegawai</a>
                                 </div>
                             </div>
                         </div>
@@ -265,6 +267,22 @@
                         </div>
                     </div>
 
+                    <!-- PEMELIHARAAN SISTEM -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#menuPemeliharaan">
+                                <i class="fa fa-wrench fa-fw me-2"></i> Pemeliharaan Sistem
+                            </button>
+                        </h2>
+                        <div id="menuPemeliharaan" class="accordion-collapse collapse" data-bs-parent="#sidebarMenu">
+                            <div class="accordion-body">
+                                <div class="list-group list-group-flush">
+                                    <a href="{{ route('backend.backup.database') }}" class="list-group-item"><i class="fa fa-angle-right fa-fw"></i> Backup Database</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- PENGATURAN -->
                     <div class="accordion-item mb-3">
                         <h2 class="accordion-header">
@@ -276,6 +294,7 @@
                             <div class="accordion-body">
                                     <a href="{{ route('settings.index', 'school_profile') }}" class="list-group-item"><i class="fa fa-angle-right fa-fw"></i> Profil Sekolah</a>
                                     <a href="{{ route('settings.index', 'mail_server') }}" class="list-group-item"><i class="fa fa-angle-right fa-fw"></i> Email Server</a>
+                                    <a href="{{ route('settings.index', 'social_account') }}" class="list-group-item"><i class="fa fa-angle-right fa-fw"></i> Jejaring Sosial</a>
                             </div>
                         </div>
                     </div>

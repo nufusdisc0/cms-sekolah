@@ -7,6 +7,7 @@ use App\Models\Registrant;
 use App\Models\AdmissionPhase;
 use App\Models\Major;
 use App\Services\RegistrationNumberService;
+use App\Events\AdmissionFormSubmitted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -116,7 +117,7 @@ class PublicAdmissionController extends Controller
             session()->forget('admission_form');
 
             // Dispatch event for email notification (Phase 4)
-            // event(new AdmissionFormSubmitted($registrant));
+            event(new AdmissionFormSubmitted($registrant));
 
             return redirect()->route('public.admission.confirmation', $registrant)
                 ->with('success', 'Pendaftaran berhasil! Silakan periksa email Anda untuk konfirmasi.');

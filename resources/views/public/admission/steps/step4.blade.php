@@ -196,6 +196,9 @@
                     Saya setuju dengan <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#privacyModal">kebijakan privasi</a> dan penggunaan data pribadi saya.
                 </label>
             </div>
+
+            <!-- reCAPTCHA v3 Hidden Token -->
+            <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
         </div>
 
         <div class="card-footer bg-light d-flex justify-content-between">
@@ -290,5 +293,58 @@
             this.setCustomValidity('');
         }
     });
+
+    /* =================================
+       reCAPTCHA v3 Integration (Phase 4)
+       ================================= */
+    @php
+        $recaptchaEnabled = \App\Services\RecaptchaService::isEnabled();
+        $recaptchaSiteKey = $recaptchaEnabled ? \App\Services\RecaptchaService::getAdminKey() : null;
+    @endphp
+
+    @if($recaptchaEnabled && $recaptchaSiteKey)
+    // Load reCAPTCHA v3 script
+    (function() {
+        const script = document.createElement('script');
+        script.src = 'https://www.google.com/recaptcha/api.js';
+        document.head.appendChild(script);
+
+        // Wait for grecaptcha to be ready
+        window.grecaptchaReady = false;
+        window.__grecaptcha_onChange = function(token) {
+            document.getElementById('g-recaptcha-response').value = token;
+        };
+
+        // Execute reCAPTCHA on page load
+        if (typeof window.grecaptcha === 'undefined') {
+            // Wait for script to load
+            let checkCount = 0;
+            const waitForGreca = setInterval(function() {
+                if (typeof window.grecaptcha !== 'undefined' && window.grecaptcha.ready) {
+                    window.grecaptcha.ready(function() {
+                        executeRecaptcha();
+                    });
+                    clearInterval(waitForGreca);
+                }
+                checkCount++;
+                if (checkCount > 50) clearInterval(waitForGreca); // Timeout after 5 seconds
+            }, 100);
+        } else {
+            window.grecaptcha.ready(function() {
+                executeRecaptcha();
+            });
+        }
+
+        function executeRecaptcha() {
+            window.grecaptcha.execute('{{ $recaptchaSiteKey }}', {action: 'submit'}).then(function(token) {
+                document.getElementById('g-recaptcha-response').value = token;
+                console.log('reCAPTCHA token generated successfully');
+            });
+        }
+    })();
+    @else
+    // reCAPTCHA is disabled - token will be empty but form will still work
+    console.log('reCAPTCHA v3 is disabled or not configured');
+    @endif
 </script>
 @endpush

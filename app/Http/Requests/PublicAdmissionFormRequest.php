@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\RecaptchaRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PublicAdmissionFormRequest extends FormRequest
@@ -88,6 +89,7 @@ class PublicAdmissionFormRequest extends FormRequest
             'graduation_year' => 'required|numeric|min:' . (date('Y') - 10) . '|max:' . date('Y'),
             'photo' => 'required|image|max:2048|mimes:jpeg,png,jpg',
             'documents.*' => 'nullable|file|max:5120|mimes:pdf,doc,docx,jpg,jpeg,png',
+            'g-recaptcha-response' => ['required', new RecaptchaRule()],
         ];
     }
 
@@ -118,6 +120,7 @@ class PublicAdmissionFormRequest extends FormRequest
             'photo.image' => 'File harus berupa gambar',
             'photo.max' => 'Ukuran foto maksimal 2MB',
             'documents.*.max' => 'Ukuran dokumen maksimal 5MB',
+            'g-recaptcha-response.required' => 'Verifikasi reCAPTCHA wajib dilakukan',
         ];
     }
 

@@ -99,6 +99,11 @@
     </style>
     @stack('styles')
     @livewireStyles
+
+    <!-- Feed Discovery Links -->
+    <link rel="alternate" type="application/rss+xml" title="Blog Feed" href="{{ route('public.feed.blog') }}">
+    <link rel="alternate" type="application/atom+xml" title="Blog Atom Feed" href="{{ route('public.feed.atom') }}">
+    <link rel="alternate" type="application/feed+json" title="Blog JSON Feed" href="{{ route('public.feed.blog.json') }}">
 </head>
 <body>
     <header>
@@ -231,7 +236,7 @@
                         &copy; {{ date('Y') }} {{ $global_settings['school_name']->setting_value ?? config('app.name', 'Sekolah') }}. All rights reserved.
                     </div>
                     <div class="col-md-6 col-12 text-md-end text-center">
-                        Powered by <a href="http://sekolahku.web.id">sekolahku.web.id</a>
+                        Powered by Utama Software
                     </div>
                 </div>
             </div>
@@ -240,8 +245,8 @@
 
     {{-- SEARCH FORM OVERLAY --}}
     <div id="search_form">
-        <form action="{{ url('/search') }}" method="GET">
-            <input type="text" name="keyword" autocomplete="off" placeholder="Masukan kata kunci pencarian" />
+        <form action="{{ route('public.search') }}" method="GET">
+            <input type="text" name="q" autocomplete="off" placeholder="Masukan kata kunci pencarian" />
             <button type="submit" class="btn btn-lg btn-outline-light rounded-0"><i class="fa fa-search"></i> CARI</button>
         </form>
     </div>
@@ -269,6 +274,86 @@
         document.getElementById('return-to-top').addEventListener('click', function() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
+
+        // Search autocomplete functionality
+        const searchInput = document.querySelector('#search_form input[name="q"]');
+        let autocompleteTimeout;
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                clearTimeout(autocompleteTimeout);
+                const query = this.value.trim();
+
+                if (query.length < 2) {
+                    // Remove autocomplete if query too short
+                    const existing = document.getElementById('search-autocomplete-results');
+                    if (existing) existing.remove();
+                    return;
+                }
+
+                autocompleteTimeout = setTimeout(() => {
+                    fetch(`/api/search/autocomplete?q=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Create autocomplete dropdown
+                            let existing = document.getElementById('search-autocomplete-results');
+                            if (existing) existing.remove();
+
+                            if (data.results && data.results.length > 0) {
+                                const dropdown = document.createElement('div');
+                                dropdown.id = 'search-autocomplete-results';
+                                dropdown.style.cssText = `
+                                    position: absolute;
+                                    background: white;
+                                    border: 1px solid #ddd;
+                                    border-radius: 4px;
+                                    max-height: 300px;
+                                    overflow-y: auto;
+                                    width: 400px;
+                                    margin-top: 5px;
+                                    z-index: 1000;
+                                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                                `;
+
+                                data.results.forEach(result => {
+                                    const item = document.createElement('a');
+                                    item.href = result.url;
+                                    item.style.cssText = `
+                                        display: block;
+                                        padding: 10px 15px;
+                                        border-bottom: 1px solid #f0f0f0;
+                                        text-decoration: none;
+                                        color: #333;
+                                        transition: background-color 0.2s;
+                                    `;
+                                    item.onmouseover = () => item.style.backgroundColor = '#f5f5f5';
+                                    item.onmouseout = () => item.style.backgroundColor = 'transparent';
+
+                                    const icon = `
+                                        <i class="fa fa-${result.icon} me-2" style="width: 20px; color: #666;"></i>
+                                    `;
+                                    const text = `<strong>${result.name}</strong> <span style="color: #999; font-size: 0.9em;"><em>(${result.type})</em></span>`;
+                                    item.innerHTML = icon + text;
+
+                                    dropdown.appendChild(item);
+                                });
+
+                                searchInput.parentElement.parentElement.style.position = 'relative';
+                                searchInput.parentElement.parentElement.appendChild(dropdown);
+                            }
+                        })
+                        .catch(error => console.error('Autocomplete error:', error));
+                }, 300);
+            });
+
+            // Close autocomplete when clicking elsewhere
+            document.addEventListener('click', function(e) {
+                if (e.target !== searchInput) {
+                    const dropdown = document.getElementById('search-autocomplete-results');
+                    if (dropdown) dropdown.remove();
+                }
+            });
+        }
     </script>
     @livewireScripts
     @stack('scripts')

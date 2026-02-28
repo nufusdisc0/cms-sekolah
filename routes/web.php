@@ -67,6 +67,32 @@ Route::get('/search', [\App\Http\Controllers\SearchController::class , 'search']
 Route::get('/api/search/autocomplete', [\App\Http\Controllers\SearchController::class , 'autocomplete']);
 Route::get('/api/search/trending', [\App\Http\Controllers\SearchController::class , 'trending']);
 
+// Public Feed Routes (RSS, Atom, JSON)
+Route::get('/feed', [\App\Http\Controllers\FeedController::class , 'feedBlog'])->name('public.feed.blog');
+Route::get('/feed.xml', [\App\Http\Controllers\FeedController::class , 'feedBlog'])->name('public.feed.blog.xml');
+Route::get('/feed.json', [\App\Http\Controllers\FeedController::class , 'feedBlog'])->name('public.feed.blog.json');
+Route::get('/feed/atom', [\App\Http\Controllers\FeedController::class , 'feedAtom'])->name('public.feed.atom');
+
+Route::get('/feed/category/{category:category_slug}', [\App\Http\Controllers\FeedController::class , 'feedCategory'])->name('public.feed.category');
+Route::get('/feed/category/{category:category_slug}.xml', [\App\Http\Controllers\FeedController::class , 'feedCategory']);
+Route::get('/feed/category/{category:category_slug}.json', [\App\Http\Controllers\FeedController::class , 'feedCategory']);
+
+Route::get('/feed/tag/{tag:slug}', [\App\Http\Controllers\FeedController::class , 'feedTag'])->name('public.feed.tag');
+Route::get('/feed/tag/{tag:slug}.xml', [\App\Http\Controllers\FeedController::class , 'feedTag']);
+Route::get('/feed/tag/{tag:slug}.json', [\App\Http\Controllers\FeedController::class , 'feedTag']);
+
+Route::get('/feed/alumni', [\App\Http\Controllers\FeedController::class , 'feedAlumni'])->name('public.feed.alumni');
+Route::get('/feed/alumni.xml', [\App\Http\Controllers\FeedController::class , 'feedAlumni']);
+Route::get('/feed/alumni.json', [\App\Http\Controllers\FeedController::class , 'feedAlumni']);
+
+Route::get('/feed/students', [\App\Http\Controllers\FeedController::class , 'feedStudents'])->name('public.feed.students');
+Route::get('/feed/students.xml', [\App\Http\Controllers\FeedController::class , 'feedStudents']);
+Route::get('/feed/students.json', [\App\Http\Controllers\FeedController::class , 'feedStudents']);
+
+Route::get('/feed/employees', [\App\Http\Controllers\FeedController::class , 'feedEmployees'])->name('public.feed.employees');
+Route::get('/feed/employees.xml', [\App\Http\Controllers\FeedController::class , 'feedEmployees']);
+Route::get('/feed/employees.json', [\App\Http\Controllers\FeedController::class , 'feedEmployees']);
+
 Route::get('/login', [AuthController::class , 'showLoginForm'])->name('login')->middleware('guest');
 Route::post('/login', [AuthController::class , 'login'])->middleware('guest');
 Route::post('/logout', [AuthController::class , 'logout'])->name('logout')->middleware('auth');
@@ -156,6 +182,9 @@ Route::middleware('auth')->group(function () {
             Route::get('import/history', [BulkImportController::class , 'showImportHistory'])->name('import.history');
             Route::post('import/{importLog}/rollback', [BulkImportController::class , 'rollbackImport'])->name('import.rollback');
 
+            // Maintenance Routes
+            Route::get('backup/database', [App\Http\Controllers\Backend\BackupController::class , 'downloadDatabase'])->name('backup.database');
+
             // Reporting & Analytics Routes
             Route::get('reports/dashboard', [App\Http\Controllers\Backend\ReportingController::class , 'dashboard'])->name('reports.dashboard');
             Route::get('reports/students', [App\Http\Controllers\Backend\ReportingController::class , 'studentStatistics'])->name('reports.students');
@@ -211,6 +240,12 @@ Route::middleware('auth')->group(function () {
 
             Route::resource('achievements', App\Http\Controllers\Backend\AchievementController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::resource('scholarships', App\Http\Controllers\Backend\ScholarshipController::class)->only(['index', 'store', 'update', 'destroy']);
+
+            // Security Management Routes (Phase 4)
+            Route::get('security/ip-bans', [App\Http\Controllers\Backend\SecurityController::class , 'showIPBans'])->name('security.ip-bans');
+            Route::patch('security/ip-bans/{ban}/release', [App\Http\Controllers\Backend\SecurityController::class , 'releaseBan'])->name('security.release-ban');
+            Route::get('security/ip-bans/{ban}/history', [App\Http\Controllers\Backend\SecurityController::class , 'viewBanHistory'])->name('security.ban-history');
+            Route::delete('security/ip-bans/{ban}', [App\Http\Controllers\Backend\SecurityController::class , 'deleteBan'])->name('security.delete-ban');
         }
         );
     });

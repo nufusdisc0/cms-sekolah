@@ -17,6 +17,14 @@
                                 <option value="{{ trim($opt) }}">{{ ucfirst(trim($opt)) }}</option>
                             @endforeach
                         </select>
+                    @elseif($row->setting_default_value === 'image')
+                        @if(!empty($settings[$row->setting_variable]))
+                            <div class="mb-2">
+                                <img src="{{ asset('storage/media_library/images/' . $settings[$row->setting_variable]) }}" class="img-thumbnail" style="max-height: 100px;">
+                            </div>
+                        @endif
+                        <input type="file" wire:model="uploads.{{ $row->setting_variable }}" class="form-control" accept="image/jpeg,image/png,image/gif">
+                        @error('uploads.'.$row->setting_variable) <span class="text-danger small">{{ $message }}</span> @enderror
                     @else
                         <input type="text" wire:model="settings.{{ $row->setting_variable }}" class="form-control" value="{{ $settings[$row->setting_variable] ?? '' }}">
                     @endif
